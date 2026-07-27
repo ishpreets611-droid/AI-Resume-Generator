@@ -1,12 +1,16 @@
 import streamlit as st
-# streamlit : web based app making
+# streamlit: Web based app making
 # lite python framework
 
 st.title("AI Resume Maker")
-st.markdown("""## user can create or
-download AI created Resume based on high ATS 
+
+st.markdown("""## User can create or
+download AI created Resume based on high ATS
 Score""")
 
+
+#==================AGENT CODE===================
+# Step 2: Load Modules
 
 import os
 import time
@@ -22,12 +26,14 @@ import streamlit as st
 from langchain_community.document_loaders import PyMuPDFLoader
 
 
-# ==================API KEY LOAD==============
+# ================API KEY LOAD===================
 
-GOOGLE_API_KEY = st.side.text_input("GOOGLE_API_KEY",type="password")
-GROQ_API_KEY = st.side.text_input("GROQ_API_KEY",type="password")
-TAVILY_API_KEY = st.side.text_input("TAVILY_API_KEY",type="password")
+GOOGLE_API_KEY = st.sidebar.text_input("GOOGLE_API_KEY",type="password")
+GROQ_API_KEY = st.sidebar.text_input("GROQ_API_KEY",type="password")
+TAVILY_API_KEY = st.sidebar.text_input("TAVILY_API_KEY",type="password")
 
+
+# ===============MODEL BUILDING=============
 model = ChatGoogleGenerativeAI(
     model = 'gemini-3.5-flash-lite',
     google_api_key = GOOGLE_API_KEY
@@ -47,7 +53,7 @@ def search_recent_news_jobs(query):
 
 
 
- # agent creation
+# agent creation
 from langchain.agents import create_agent
 
 agent = create_agent(
@@ -56,8 +62,7 @@ agent = create_agent(
 )
 
 
-
-# ======= PROMPT GENERATOR============s
+# ==== PROMPT GENERATOR================
 def prompt_generator(agent = agent):
   """This function help to give detailed prompt
   followed by Chain of thoughts and
@@ -81,8 +86,7 @@ def prompt_generator(agent = agent):
     f.write(response.content[-1]['text'])
   return "Prompt file generated Successfully, agent can read it"
 
-
-
+prompt_generator(model)
 # tool 2:
 def resume_maker_prompt():
   """This function just gives
@@ -92,8 +96,8 @@ def resume_maker_prompt():
     prompt = f.read()
   return prompt
 
-
-
+resume_maker_prompt()
+# ===========GENERATE RESUME========
 prompt = """You are a helpful AI assistant
 with job resume maker, your task is to give
 HTML format resume, with proper designing using recent CSS and JS
@@ -109,11 +113,15 @@ Give Python Developer Resume"""
 query = final_prompt + user_details
 
 if st.button("Generate Resume"):
-  with st.spinner("Running Agent....."):
-    
+  with st.spinner("Running Agent...."):
+
     response = agent.invoke({'messages':[{'role':'user','content':query}]})
     code = response['messages'][-1].content[-1]['text']
 
     #st.markdown(code)
-    st.html(code,width="stretch", unsafe_allow_javascript=True)
+    st.html(code, width="stretch", unsafe_allow_javascript=True)
+
+
+
+
 
