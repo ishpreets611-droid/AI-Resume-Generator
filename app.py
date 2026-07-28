@@ -105,7 +105,7 @@ def resume_maker_prompt():
 resume_maker_prompt()
 
 # ==============upload image =================
-upload_file = st.sideabr.file_uploader(
+upload_file = st.sidebar.file_uploader(
     "choose an image file",
     type=["jpg", "jpeg", "png", "webp"]
 )
