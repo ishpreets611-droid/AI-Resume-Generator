@@ -131,7 +131,7 @@ and give result like naukri theme design with
 job name, job desc, salary,
 apply link and OUTPUT must be In HTML no markdown"""
 
-st.html(code, width="stretch" , unsafe_allow_java
+st.html(code, width="stretch" , unsafe_allow_javascript=True)
 
 st.divider()
 response = agent.invoke({'messages':[{'role':'user','content',:job_prompt}]})
